@@ -340,7 +340,7 @@ def plot_prediction_scatter(test_imputations, test_originals, test_masks, featur
 def generate_test2_samples_vae(model, X_test2, test2_loader, device, n_samples_per_test2=100):
     """Generate multiple samples for Test2 dataset using the trained VAE model.
     """
-    # We'll generate multiple samples to capture uncertainty
+    # We'll generate multiple samples
     test2_samples = np.zeros((X_test2.shape[0], n_samples_per_test2, X_test2.shape[1]))
 
     # Set model to evaluation mode
@@ -361,8 +361,8 @@ def generate_test2_samples_vae(model, X_test2, test2_loader, device, n_samples_p
             
             # Generate multiple samples for each item in the batch
             for j in range(n_samples_per_test2):
-                # Get reconstruction and uncertainty
-                reconstruction, mu, logvar, uncertainty = model(batch_data, batch_mask)
+                # Get reconstruction
+                reconstruction, mu, logvar = model(batch_data, batch_mask)
                 
                 # Apply mask: keep original values where available, use reconstructed values where missing
                 mask_float = batch_mask.float()
