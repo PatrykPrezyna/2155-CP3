@@ -154,7 +154,7 @@ def plot_distribution_comparison(last_4_features, feature_metrics, test_imputati
                 bins = np.linspace(all_values.min(), all_values.max(), 30)
                 
                 # Plot histograms
-                ax.hist(gt_clean, bins=bins, alpha=0.7, label='Ground Truth', 
+                ax.hist(gt_clean, bins=bins, alpha=0.7, label='Dataset', 
                     color='skyblue', density=True, edgecolor='black', linewidth=0.5)
                 ax.hist(imputed_clean, bins=bins, alpha=0.7, label='Imputed', 
                     color='lightcoral', density=True, edgecolor='black', linewidth=0.5)
@@ -163,16 +163,16 @@ def plot_distribution_comparison(last_4_features, feature_metrics, test_imputati
                 gt_mean, gt_std = gt_clean.mean(), gt_clean.std()
                 imp_mean, imp_std = imputed_clean.mean(), imputed_clean.std()
                 correlation = np.corrcoef(gt_clean, imputed_clean)[0, 1] if len(gt_clean) > 1 else 0
+
+                # Add vertical lines for means
+                ax.axvline(gt_mean, color='blue', linestyle='--', alpha=0.8, label='Dataset Mean')
+                ax.axvline(imp_mean, color='red', linestyle='--', alpha=0.8, label='Imp Mean')
                 
                 # Set labels and title
                 ax.set_xlabel(f'{feature_name} Values')
                 ax.set_ylabel('Density')
                 ax.legend()
                 ax.grid(True, alpha=0.3)
-                
-                # Add vertical lines for means
-                ax.axvline(gt_mean, color='blue', linestyle='--', alpha=0.8, label='GT Mean')
-                ax.axvline(imp_mean, color='red', linestyle='--', alpha=0.8, label='Imp Mean')
                 
                 # Add performance metrics text box
                 metrics = feature_metrics[feature_name]
@@ -280,7 +280,7 @@ def plot_prediction_scatter(test_imputations, test_originals, test_masks, featur
             correlation = np.nan
         
         # Set labels and title
-        ax.set_xlabel('Ground Truth', fontsize=10)
+        ax.set_xlabel('Dataset', fontsize=10)
         ax.set_ylabel('Predicted', fontsize=10)
         ax.set_title(f'{feature_names[feature_idx]}\n'
                     f'R²={correlation:.3f}, MSE={mse:.4f}', fontsize=10, fontweight='bold')
