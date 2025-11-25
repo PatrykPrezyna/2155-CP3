@@ -292,6 +292,7 @@ def plot_prediction_scatter(test_imputations, test_originals, test_masks, featur
         feature_names: List of feature names
         n_features: Number of random features to plot (default 25 for 5x5 grid)
     """
+    print("Creating scatter plots for predicted vs ground truth values...")
     # Create masks for missing values (where we need to evaluate imputation)
     missing_mask = (test_masks == 0)  # True where values were missing
     
@@ -305,15 +306,15 @@ def plot_prediction_scatter(test_imputations, test_originals, test_masks, featur
     # Randomly select features to plot
     np.random.seed(42)  # For reproducible selection
     selected_features = np.random.choice(features_with_missing, size=n_features, replace=False)
-    
-    # Create 5x5 subplots
-    fig, axes = plt.subplots(5, 5, figsize=(20, 16))
+
+    # Create 5x8 subplots
+    fig, axes = plt.subplots(5, 8, figsize=(20, 16))
     fig.suptitle('Predicted vs Ground Truth Values (Missing Positions Only)', fontsize=16, fontweight='bold')
     
     axes = axes.flatten()
     
     for idx, feature_idx in enumerate(selected_features):
-        if idx >= 25:  # Safety check for 5x5 grid
+        if idx >= 40:  # Safety check for 5x8 grid
             break
             
         ax = axes[idx]
@@ -326,7 +327,7 @@ def plot_prediction_scatter(test_imputations, test_originals, test_masks, featur
                     ha='center', va='center', transform=ax.transAxes, fontsize=8)
             ax.set_title(f'{feature_names[feature_idx][:15]} - No Missing', fontsize=8)
             continue
-            
+        print(f'Plotting feature: {feature_names[feature_idx]} with {feature_missing_mask.sum()} missing values')
         # Get predicted and ground truth values for missing positions only
         predicted_values = test_imputations[feature_missing_mask, feature_idx]
         true_values = test_originals[feature_missing_mask, feature_idx]
@@ -371,7 +372,7 @@ def plot_prediction_scatter(test_imputations, test_originals, test_masks, featur
         axes[0].legend(loc='lower right', fontsize=7)
     
     # Hide any unused subplots
-    for idx in range(len(selected_features), 25):
+    for idx in range(len(selected_features), 40):
         axes[idx].set_visible(False)
     
     plt.tight_layout()
